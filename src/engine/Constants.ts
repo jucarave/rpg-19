@@ -1,0 +1,1 @@
+export const VERTEX_SIZE = 2;

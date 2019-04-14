@@ -44,13 +44,6 @@ class Renderer {
         this._shaders = {
             Basic: this._compileShader(BasicShader)
         };
-
-        this._useProgram(this._shaders.Basic);
-    }
-
-    private _useProgram(program: WebGLProgram): void {
-        this._program = program;
-        this._gl.useProgram(program);
     }
 
     private _compileShader(shader: ShaderStruct): WebGLProgram {
@@ -87,10 +80,23 @@ class Renderer {
         return program;
     }
 
+    public useProgram(program: WebGLProgram): boolean {
+        if (this._program === program) { return false; }
+
+        this._program = program;
+        this._gl.useProgram(program);
+
+        return true;
+    }
+
     public clear(): void {
         const gl = this._gl;
 
         gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+
+    public getProgram(program: 'Basic'): WebGLProgram {
+        return this._shaders[program];
     }
 
     public get GL(): WebGLRenderingContext { return this._gl; }
