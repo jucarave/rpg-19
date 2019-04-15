@@ -1,6 +1,8 @@
 import Renderer from './engine/Renderer';
 import Sprite from 'engine/geometries/Sprite';
 import Camera from 'engine/Camera';
+import Vector2 from 'engine/math/Vector2';
+import Texture from 'engine/Texture';
 
 class App {
     private _renderer           : Renderer;
@@ -14,7 +16,8 @@ class App {
 
     private _createTriangle(): void {
         // Create triangle
-        const sprite = new Sprite(32.0, 32.0, this._renderer);
+        const texture = new Texture("img/characters.png", this._renderer.GL);
+        const sprite = new Sprite(32.0, 64.0, texture, this._renderer, { pivot: new Vector2(16.0, 64.0) });
 
         const camera = new Camera();
 
@@ -24,7 +27,10 @@ class App {
 
     private _renderTriangle(sprite: Sprite, camera: Camera): void {
         this._renderer.clear();
-        sprite.render(camera);
+
+        if (sprite.texture.ready) {
+            sprite.render(camera);
+        }
 
         requestAnimationFrame(() => {
             this._renderTriangle(sprite, camera);
