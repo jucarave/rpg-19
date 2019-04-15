@@ -11,22 +11,23 @@ class App {
         this._renderer = new Renderer(1024, 576, document.getElementById("divGame"));
         this._renderer.clear();
 
-        const texture = new Texture("img/characters.png", this._renderer.GL);
+        Texture.loadTexture("characters", "img/characters.png", this._renderer.GL);
 
         const wait = () => {
-            if (!texture.ready) {
+            if (!Texture.areTexturesReady()) {
                 requestAnimationFrame(() => { wait(); });
                 return;
             }
 
-            this._createTriangle(texture);
+            this._createTriangle();
         };
         
         wait();
     }
 
-    private _createTriangle(texture: Texture): void {
+    private _createTriangle(): void {
         // Create triangle
+        const texture = Texture.getTexture("characters");
         const sprite = new Sprite(32.0, 64.0, texture, this._renderer, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
         const entity = new Entity(0, 0, sprite);
 
