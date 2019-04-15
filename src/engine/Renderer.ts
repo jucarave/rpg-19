@@ -1,5 +1,6 @@
 import { BasicShader } from './shaders/Basic';
 import { ShaderStruct, ShaderCollection } from './Types';
+import Input from './Input';
 
 class Renderer {
     private _canvas         : HTMLCanvasElement;
@@ -11,6 +12,8 @@ class Renderer {
         this._createcanvas(width, height, container);
         this._initGL();
         this._initShaders();
+
+        Input.init(this._canvas);
     }
 
     private _createcanvas(width: number, height: number, container: HTMLElement): void {

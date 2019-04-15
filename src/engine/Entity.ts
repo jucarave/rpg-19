@@ -23,15 +23,27 @@ class Entity {
     }
 
     private _updateTransformationMatrix(): void {
-        this._transMatrix.translate(this.position.x, this.position.y, 0.0);
+        this._transMatrix.translate(this.position.x, -this.position.y, 0.0);
     }
 
     public addComponent(component: Component): void {
         this._components.push(component);
 
+        component.entity = this;
+
         if (this._started) {
             component.start();
         }
+    }
+
+    public getComponent(componentName: string): Component {
+        for (let i=0,comp;comp=this._components[i];i++) {
+            if (comp.componentName === componentName) {
+                return comp;
+            }
+        }
+
+        return null;
     }
 
     public start(): void {

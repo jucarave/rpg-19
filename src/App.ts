@@ -3,6 +3,8 @@ import Sprite from 'engine/geometries/Sprite';
 import Texture from 'engine/Texture';
 import Entity from 'engine/Entity';
 import Scene from 'engine/Scene';
+import PlayerComponent from 'components/PlayerComponent';
+import InputComponent from 'components/InputComponent';
 
 class App {
     private _renderer           : Renderer;
@@ -26,28 +28,31 @@ class App {
     }
 
     private _createScene(): void {
-        // Create triangle
+        // Create scene
         const texture = Texture.getTexture("characters");
         const sprite = new Sprite(32.0, 64.0, texture, this._renderer, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
         const entity = new Entity(0, 0, sprite);
+
+        entity.addComponent(new InputComponent());
+        entity.addComponent(new PlayerComponent());
 
         const scene = new Scene();
         
         scene.addLayer("Entities");
         scene.addEntity(entity, "Entities");
 
-        // Draw triangle
-        this._renderTriangle(scene);
+        // Draw scene
+        this._renderScene(scene);
     }
 
-    private _renderTriangle(scene: Scene): void {
+    private _renderScene(scene: Scene): void {
         this._renderer.clear();
 
         scene.update();
         scene.render();
 
         requestAnimationFrame(() => {
-            this._renderTriangle(scene);
+            this._renderScene(scene);
         });
     }
 }

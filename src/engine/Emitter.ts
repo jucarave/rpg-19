@@ -9,9 +9,9 @@ class Emitter {
         this._listeners.push(callback);
     }
 
-    public dispatch(): void {
+    public dispatch(parameters?: any): void {
         this._listeners.forEach((callback: Function) => {
-            callback();
+            callback(parameters);
         })
     }
 }

@@ -7,14 +7,16 @@ class Vector2 {
     public readonly onChange    : Emitter;
 
     constructor (x: number, y: number) {
-        this.set(x, y);
-
         this.onChange = new Emitter();
+
+        this.set(x, y);
     }
 
     public set(x: number, y: number): void {
         this._x = x;
         this._y = y;
+
+        this.onChange.dispatch();
     }
 
     public set x(x: number) { this._x = x; this.onChange.dispatch(); }
