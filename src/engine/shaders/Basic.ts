@@ -6,8 +6,12 @@ export const BasicShader : ShaderStruct = {
 
         attribute vec2 aPosition;
 
+        uniform mat4 uMVP;
+
         void main() {
-            gl_Position = vec4(aPosition.x, aPosition.y, 0.0, 1.0);
+            vec4 position = vec4(aPosition.x, aPosition.y, 0.0, 1.0);
+
+            gl_Position = uMVP * position;
         }
     `,
 
