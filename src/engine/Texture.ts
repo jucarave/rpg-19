@@ -30,6 +30,8 @@ class Texture {
 
     public get ready(): boolean { return this._ready; }
     public get texture(): WebGLTexture { return this._texture; }
+    public get width(): number { return this._image.width; }
+    public get height(): number { return this._image.height; }
 }
 
 export default Texture;

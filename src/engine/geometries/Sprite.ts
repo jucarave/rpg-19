@@ -3,11 +3,12 @@ import Renderer from '../Renderer';
 import Matrix4 from 'engine/math/Matrix4';
 import Camera from 'engine/Camera';
 import { SpriteOptions } from '../Types';
-import Vector2 from 'engine/math/Vector2';
 import Texture from 'engine/Texture';
+import Entity from 'engine/Entity';
 
 const defaultOptions: SpriteOptions = {
-    pivot: new Vector2(0, 0)
+    v2Pivot: [0, 0],
+    v4UVs: [0, 0, 1, 1]
 };
 
 class Sprite extends Geometry {
@@ -19,7 +20,7 @@ class Sprite extends Geometry {
     
     private _aPosition      : number;
     private _aTexCoords     : number;
-    private _aTexUVs           : number;
+    private _aTexUVs        : number;
     private _uMVP           : WebGLUniformLocation;
     private _uTexture       : WebGLUniformLocation;
 
@@ -45,7 +46,8 @@ class Sprite extends Geometry {
     private _mergeOptions(options: SpriteOptions): void {
         this._options = {};
 
-        this._options.pivot = options.pivot || defaultOptions.pivot;
+        this._options.v2Pivot = options.v2Pivot || defaultOptions.v2Pivot;
+        this._options.v4UVs = options.v4UVs || defaultOptions.v4UVs;
     }
 
     private _getShaderLocations(): void {
@@ -63,8 +65,8 @@ class Sprite extends Geometry {
     private _buildSprite(): void {
         const w = this.width;
         const h = this.height;
-        const px = this._options.pivot.x;
-        const py = -this._options.pivot.y;
+        const px = this._options.v2Pivot[0];
+        const py = -this._options.v2Pivot[1];
 
         this.addVertice(0.0 - px,  -h - py);
         this.addVertice(  w - px,  -h - py);
@@ -76,10 +78,10 @@ class Sprite extends Geometry {
         this.addTexCoord(0.0, 0.0);
         this.addTexCoord(1.0, 0.0);
 
-        this.addUV(0, 0, 0.5, 1.0);
-        this.addUV(0, 0, 0.5, 1.0);
-        this.addUV(0, 0, 0.5, 1.0);
-        this.addUV(0, 0, 0.5, 1.0);
+        const uvs = this._options.v4UVs;
+        for (let i=0;i<4;i++) {
+            this.addUV(uvs[0]/this._texture.width, uvs[1]/this._texture.height, uvs[2]/this._texture.width, uvs[3]/this._texture.height);
+        }
 
         this.addTriangle(0, 1, 2);
         this.addTriangle(1, 3, 2);
@@ -102,10 +104,11 @@ class Sprite extends Geometry {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._iBuffer);
     }
 
-    private _uploadUniforms(camera: Camera): void {
+    private _uploadUniforms(entity: Entity, camera: Camera): void {
         const gl = this._renderer.GL;
 
-        this._mvp.copy(camera.viewMatrix);
+        this._mvp.copy(entity.transformationMatrix);
+        this._mvp.multiply(camera.viewMatrix);
         this._mvp.multiply(camera.projMatrix);
 
         gl.uniformMatrix4fv(this._uMVP, false, this._mvp.data);
@@ -118,7 +121,7 @@ class Sprite extends Geometry {
         gl.uniform1i(this._uTexture, 0);
     }
 
-    public render(camera: Camera): void {
+    public render(entity: Entity, camera: Camera): void {
         const gl = this._renderer.GL;
 
         if (this._renderer.useProgram(this._shader)) {
@@ -129,7 +132,7 @@ class Sprite extends Geometry {
         }
 
         this._uploadGeometry();
-        this._uploadUniforms(camera);
+        this._uploadUniforms(entity, camera);
         this._uploadTexture();
 
         gl.drawElements(gl.TRIANGLES, this._trianglesLength, gl.UNSIGNED_SHORT, 0);

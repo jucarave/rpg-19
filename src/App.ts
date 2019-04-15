@@ -1,8 +1,8 @@
 import Renderer from './engine/Renderer';
 import Sprite from 'engine/geometries/Sprite';
 import Camera from 'engine/Camera';
-import Vector2 from 'engine/math/Vector2';
 import Texture from 'engine/Texture';
+import Entity from 'engine/Entity';
 
 class App {
     private _renderer           : Renderer;
@@ -11,29 +11,38 @@ class App {
         this._renderer = new Renderer(1024, 576, document.getElementById("divGame"));
         this._renderer.clear();
 
-        this._createTriangle();
+        const texture = new Texture("img/characters.png", this._renderer.GL);
+
+        const wait = () => {
+            if (!texture.ready) {
+                requestAnimationFrame(() => { wait(); });
+                return;
+            }
+
+            this._createTriangle(texture);
+        };
+        
+        wait();
     }
 
-    private _createTriangle(): void {
+    private _createTriangle(texture: Texture): void {
         // Create triangle
-        const texture = new Texture("img/characters.png", this._renderer.GL);
-        const sprite = new Sprite(32.0, 64.0, texture, this._renderer, { pivot: new Vector2(16.0, 64.0) });
+        const sprite = new Sprite(32.0, 64.0, texture, this._renderer, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
+        const entity = new Entity(0, 0, sprite);
 
         const camera = new Camera();
 
         // Draw triangle
-        this._renderTriangle(sprite, camera);
+        this._renderTriangle(entity, sprite, camera);
     }
 
-    private _renderTriangle(sprite: Sprite, camera: Camera): void {
+    private _renderTriangle(entity: Entity, sprite: Sprite, camera: Camera): void {
         this._renderer.clear();
 
-        if (sprite.texture.ready) {
-            sprite.render(camera);
-        }
+        entity.render(camera);
 
         requestAnimationFrame(() => {
-            this._renderTriangle(sprite, camera);
+            this._renderTriangle(entity, sprite, camera);
         });
     }
 }

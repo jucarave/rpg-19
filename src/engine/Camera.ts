@@ -11,11 +11,18 @@ class Camera {
         this._viewMatrix = Matrix4.identity();
         this._projMatrix = Matrix4.createOrtho(512, 288, 0.1, 10.0);
         this.position = new Vector2(0.0, 0.0);
+
+        this.position.onChange.add(() => { this._updateViewMatrix(); });
+
+        this._updateViewMatrix();
+    }
+
+    private _updateViewMatrix(): void {
+        this._viewMatrix.translate(-this.position.x, this.position.y, -5.0);
     }
 
     public get projMatrix(): Matrix4 { return this._projMatrix; }
     public get viewMatrix(): Matrix4 {
-        this._viewMatrix.translate(-this.position.x, this.position.y, -5.0);
         return this._viewMatrix;
     }
 }
