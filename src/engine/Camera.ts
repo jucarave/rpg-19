@@ -7,9 +7,9 @@ class Camera {
     
     public readonly position           : Vector2;
 
-    constructor() {
+    constructor(width: number, height: number) {
         this._viewMatrix = Matrix4.identity();
-        this._projMatrix = Matrix4.createOrtho(512, 288, 0.1, 10.0);
+        this._projMatrix = Matrix4.createOrtho(width, height, 0.1, 10.0);
         this.position = new Vector2(0.0, 0.0);
 
         this.position.onChange.add(() => { this._updateViewMatrix(); });
