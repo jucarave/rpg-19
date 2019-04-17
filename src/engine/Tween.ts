@@ -2,6 +2,7 @@ import Emitter from "./Emitter";
 
 class Tween {
     private _obj             : any;
+    private _from            : any;
     private _to              : any;
     private _time            : number;
     private _duration        : number;
@@ -21,6 +22,11 @@ class Tween {
         this._running = false;
         this.onComplete = new Emitter();
 
+        this._from = {};
+        for (const i in this._to) {
+            this._from[i] = this._obj[i];
+        }
+
         Tween.tweens.push(this);
 
         if (autoStart) {
@@ -38,14 +44,15 @@ class Tween {
 
         const time = (new Date()).getTime();
         const dt = time - this._prevUpdate;
+        this._prevUpdate = time;
 
         this._time = Math.min(this._time + dt, this._duration);
 
         const f = this._time / this._duration;
         
         for (const i in this._to) {
-            const size = this._to[i] - this._obj[i];
-            this._obj[i] = this._obj[i] + size * f;
+            const size = this._to[i] - this._from[i];
+            this._obj[i] = this._from[i] + size * f;
         }
 
         if (this._time >= this._duration) {

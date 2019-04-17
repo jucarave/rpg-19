@@ -90,5 +90,7 @@ module.exports = {
         });
 
         bundleWatchify(bundle);
+
+        return bundle;
     }
 };

@@ -22,7 +22,7 @@ class CharacterComponent extends Component {
     public moveTo(xTo: number, yTo: number): void {
         this._busy = true;
 
-        const tween = new Tween(this._position, { x: this._position.x + xTo, y: this._position.y + yTo }, 1000, true);
+        const tween = new Tween(this._position, { x: this._position.x + xTo, y: this._position.y + yTo }, 100, true);
         tween.onComplete.add(() => {
             this._busy = false;
         });

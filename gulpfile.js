@@ -4,4 +4,4 @@ var bundle = require('./tasks/bundle');
 gulp.task("bundle", bundle.build);
 gulp.task("watch", bundle.watch);
 
-gulp.task("default", ["bundle"]);
+gulp.task("default", gulp.parallel("bundle"));
