@@ -1,4 +1,4 @@
-import Component from "engine/Component";
+import Component from "engine/world/Component";
 import Vector2 from "engine/math/Vector2";
 import Tween from "engine/Tween";
 

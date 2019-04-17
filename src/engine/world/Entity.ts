@@ -1,7 +1,7 @@
-import Vector2 from "./math/Vector2";
-import Sprite from "./geometries/Sprite";
+import Vector2 from "../math/Vector2";
+import Sprite from "../geometries/Sprite";
 import Camera from "./Camera";
-import Matrix4 from "./math/Matrix4";
+import Matrix4 from "../math/Matrix4";
 import Component from "./Component";
 
 class Entity {

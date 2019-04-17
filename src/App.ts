@@ -1,8 +1,8 @@
 import Renderer from './engine/Renderer';
 import Sprite from 'engine/geometries/Sprite';
 import Texture from 'engine/Texture';
-import Entity from 'engine/Entity';
-import Scene from 'engine/Scene';
+import Entity from 'engine/world/Entity';
+import Scene from 'engine/world/Scene';
 import PlayerComponent from 'components/PlayerComponent';
 import CharacterComponent from 'components/CharacterComponent';
 

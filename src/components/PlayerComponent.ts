@@ -1,4 +1,4 @@
-import Component from "engine/Component";
+import Component from "engine/world/Component";
 import Input from 'engine/Input';
 import CharacterComponent from "./CharacterComponent";
 
@@ -30,7 +30,7 @@ class PlayerComponent extends Component {
 
     public update() {
         if (this._characterController.isBusy) { return; }
-        
+
         this._checkMovement();
     }
 

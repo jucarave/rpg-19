@@ -1,10 +1,10 @@
 import Geometry from './Geometry';
 import Renderer from '../Renderer';
 import Matrix4 from 'engine/math/Matrix4';
-import Camera from 'engine/Camera';
+import Camera from 'engine/world/Camera';
 import { SpriteOptions } from '../Types';
 import Texture from 'engine/Texture';
-import Entity from 'engine/Entity';
+import Entity from 'engine/world/Entity';
 
 const defaultOptions: SpriteOptions = {
     v2Pivot: [0, 0],
