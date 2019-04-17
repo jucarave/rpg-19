@@ -1,6 +1,7 @@
 import { BasicShader } from './shaders/Basic';
 import { ShaderStruct, ShaderCollection } from './Types';
 import Input from './Input';
+import Tween from './Tween';
 
 class Renderer {
     private _canvas         : HTMLCanvasElement;
@@ -100,6 +101,10 @@ class Renderer {
 
     public getProgram(program: 'Basic'): WebGLProgram {
         return this._shaders[program];
+    }
+
+    public update(): void {
+        Tween.updateTweens();
     }
 
     public get GL(): WebGLRenderingContext { return this._gl; }

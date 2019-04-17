@@ -5,7 +5,7 @@
       "noUnusedParameters": true,
       "noUnusedLocals": true,
       "removeComments": true,
-      "target": "es5",
+      "target": "es2015",
       "baseUrl": "./"
     },
     "include": [

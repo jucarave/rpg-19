@@ -44,6 +44,7 @@ class App {
     }
 
     private _renderScene(scene: Scene): void {
+        this._renderer.update();
         this._renderer.clear();
 
         scene.update();
