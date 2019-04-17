@@ -1,18 +1,17 @@
 import Component from "engine/Component";
-import Vector2 from "engine/math/Vector2";
 import Input from 'engine/Input';
-import Tween from "engine/Tween";
+import CharacterComponent from "./CharacterComponent";
 
 class PlayerComponent extends Component {
-    private _position               : Vector2;
+    
+    private _characterController    : CharacterComponent;
 
     constructor() {
         super();
-
-        this._position = new Vector2(0.0, 0.0);
     }
 
     public start(): void {
+        this._characterController = <CharacterComponent> this.entity.getComponent("CharacterComponent");
     }
 
     private _checkMovement(): void {
@@ -24,23 +23,15 @@ class PlayerComponent extends Component {
         if (Input.getKeyPressed(Input.KEYS.DOWN)) { yTo = 1; } else
         if (Input.getKeyPressed(Input.KEYS.UP)) { yTo = -1; }
 
-        // TODO: Move this to a CharacterComponent
         if (xTo != 0 || yTo != 0) {
-            const tween = new Tween(this._position, { x: this._position.x + xTo, y: this._position.y + yTo }, 1000, true);
-            tween.onComplete.add(() => {
-                // TODO: Player is not busy anymore
-            });
+            this._characterController.moveTo(xTo, yTo);
         }
     }
 
-    private _updateEntityPosition(): void {
-        this.entity.position.set((this._position.x + 0.5) * 32, (this._position.y + 0.5) * 32);
-    }
-
     public update() {
+        if (this._characterController.isBusy) { return; }
+        
         this._checkMovement();
-
-        this._updateEntityPosition();
     }
 
     public get componentName(): string { return "PlayerComponent"; }

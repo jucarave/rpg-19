@@ -4,6 +4,7 @@ import Texture from 'engine/Texture';
 import Entity from 'engine/Entity';
 import Scene from 'engine/Scene';
 import PlayerComponent from 'components/PlayerComponent';
+import CharacterComponent from 'components/CharacterComponent';
 
 class App {
     private _renderer           : Renderer;
@@ -32,6 +33,7 @@ class App {
         const sprite = new Sprite(32.0, 64.0, texture, this._renderer, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
         const entity = new Entity(0, 0, sprite);
 
+        entity.addComponent(new CharacterComponent());
         entity.addComponent(new PlayerComponent());
 
         const scene = new Scene();
