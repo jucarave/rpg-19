@@ -1,10 +1,10 @@
 import { VERTEX_SIZE } from '../Constants';
 
 class Geometry {
-    private _vertices           : Array<number>;
-    private _texUVs          : Array<number>;
-    private _texCoords             : Array<number>;
-    private _indices            : Array<number>;
+    protected _vertices           : Array<number>;
+    protected _texUVs          : Array<number>;
+    protected _texCoords             : Array<number>;
+    protected _indices            : Array<number>;
     
     protected _vBuffer            : WebGLBuffer;
     protected _uvBuffer            : WebGLBuffer;

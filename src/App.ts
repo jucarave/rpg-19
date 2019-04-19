@@ -1,10 +1,11 @@
 import Renderer from './engine/Renderer';
-import Sprite from 'engine/geometries/Sprite';
+import Image from 'engine/geometries/Image';
 import Texture from 'engine/Texture';
 import Entity from 'engine/world/Entity';
 import Scene from 'engine/world/Scene';
 import PlayerComponent from 'components/PlayerComponent';
 import CharacterComponent from 'components/CharacterComponent';
+import MapLoader from 'data/MapLoader';
 
 class App {
     private _renderer           : Renderer;
@@ -14,6 +15,7 @@ class App {
         this._renderer.clear();
 
         Texture.loadTexture("characters", "img/characters.png", this._renderer.GL);
+        Texture.loadTexture("tileset", "img/tileset.png", this._renderer.GL).loadTiles(8, 8, 32);
 
         this._loading();
     }
@@ -30,13 +32,21 @@ class App {
     private _createScene(): void {
         // Create scene
         const texture = Texture.getTexture("characters");
-        const sprite = new Sprite(32.0, 64.0, texture, this._renderer, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
+        const sprite = new Image(texture, this._renderer).createSprite(32.0, 64.0, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
         const entity = new Entity(0, 0, sprite);
 
         entity.addComponent(new CharacterComponent());
         entity.addComponent(new PlayerComponent());
 
+        // Tileset
+        const tileTex = Texture.getTexture("tileset");
+        const tileEnt = MapLoader.loadMap(tileTex, this._renderer);
+
         const scene = new Scene();
+        scene.camera.position.set(8*32, 4.5*32);
+
+        scene.addLayer("Background");
+        scene.addEntity(tileEnt, "Background");
         
         scene.addLayer("Entities");
         scene.addEntity(entity, "Entities");

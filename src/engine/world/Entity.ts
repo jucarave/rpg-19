@@ -1,20 +1,20 @@
 import Vector2 from "../math/Vector2";
-import Sprite from "../geometries/Sprite";
+import Image from "../geometries/Image";
 import Camera from "./Camera";
 import Matrix4 from "../math/Matrix4";
 import Component from "./Component";
 
 class Entity {
-    private _sprite                     : Sprite;
+    private _image                      : Image;
     private _transMatrix                : Matrix4;
     private _components                 : Array<Component>;
     private _started                    : boolean;
 
     public readonly position            : Vector2;
 
-    constructor(x: number, y: number, sprite?: Sprite) {
+    constructor(x: number, y: number, image?: Image) {
         this.position = new Vector2(x, y);
-        this._sprite = sprite;
+        this._image = image;
         this._transMatrix = Matrix4.identity();
         this._components = new Array();
         this._started = false;
@@ -61,9 +61,9 @@ class Entity {
     }
 
     public render(camera: Camera): void {
-        if (!this._sprite) { return; }
+        if (!this._image) { return; }
 
-        this._sprite.render(this, camera);
+        this._image.render(this, camera);
     }
 
     public get transformationMatrix(): Matrix4 {

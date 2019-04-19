@@ -35,6 +35,7 @@ class Renderer {
     private _initGL(): void {
         const gl = this._gl;
 
+        gl.disable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
 

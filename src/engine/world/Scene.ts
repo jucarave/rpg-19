@@ -7,12 +7,13 @@ interface Layers {
 
 class Scene {
     private _layers             : Layers;
-    private _camera             : Camera;
     private _started            : boolean;
+
+    public readonly camera             : Camera;
 
     constructor() {
         this._layers = {};
-        this._camera = new Camera(512, 288);
+        this.camera = new Camera(512, 288);
         this._started = false;
     }
 
@@ -58,7 +59,7 @@ class Scene {
     public render(): void {
         for (const i in this._layers) {
             this._layers[i].forEach((entity: Entity) => {
-                entity.render(this._camera);
+                entity.render(this.camera);
             });
         }
     }

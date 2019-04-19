@@ -6,11 +6,16 @@ class Texture {
     private _image      : HTMLImageElement;
     private _texture    : WebGLTexture;
     private _ready      : boolean;
+    private _tiles      : Array<Array<number>>;
+    private _tileSize   : Array<number>;
 
     protected static _textures      : TextureType;
 
     constructor(src: string, gl: WebGLRenderingContext) {
         this._ready = false;
+
+        this._tiles = null;
+        this._tileSize = null;
 
         this._image = new Image();
         this._image.src = src;
@@ -34,12 +39,32 @@ class Texture {
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
-    public static loadTexture(key: string, src: string, gl: WebGLRenderingContext): void {
+    public loadTiles(width: number, height: number, gridSize: number): Texture {
+        this._tiles = [];
+        this._tileSize = [width, height];
+        const gs = gridSize;
+
+        for (let j=0;j<height;j++) {
+            for (let i=0;i<width;i++) {
+                this._tiles.push([i*gs, j*gs, gs, gs]);
+            }
+        }
+
+        return this;
+    }
+
+    public getTileUVs(tileX: number, tileY: number): Array<number> {
+        return this._tiles[tileY * this._tileSize[0] + tileX];
+    }
+
+    public static loadTexture(key: string, src: string, gl: WebGLRenderingContext): Texture {
         if (!Texture._textures) { 
             Texture._textures = {}; 
         }
 
         Texture._textures[key] = new Texture(src, gl);
+
+        return Texture._textures[key];
     }
 
     public static getTexture(key: string): Texture {
@@ -62,6 +87,7 @@ class Texture {
     public get texture(): WebGLTexture { return this._texture; }
     public get width(): number { return this._image.width; }
     public get height(): number { return this._image.height; }
+    public get tileSize(): Array<number> { return this._tileSize; }
 }
 
 export default Texture;

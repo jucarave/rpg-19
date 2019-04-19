@@ -5,18 +5,19 @@ import Camera from 'engine/world/Camera';
 import { SpriteOptions } from '../Types';
 import Texture from 'engine/Texture';
 import Entity from 'engine/world/Entity';
+import { VERTEX_SIZE } from 'engine/Constants';
 
 const defaultOptions: SpriteOptions = {
     v2Pivot: [0, 0],
     v4UVs: [0, 0, 1, 1]
 };
 
-class Sprite extends Geometry {
+class Image extends Geometry {
     private _renderer       : Renderer;
     private _shader         : WebGLProgram;
     private _texture        : Texture;
     private _mvp            : Matrix4;
-    private _options        : SpriteOptions;
+    private _gridSize       : number;
     
     private _aPosition      : number;
     private _aTexCoords     : number;
@@ -24,30 +25,25 @@ class Sprite extends Geometry {
     private _uMVP           : WebGLUniformLocation;
     private _uTexture       : WebGLUniformLocation;
 
-    public readonly width   : number;
-    public readonly height   : number;
-
-    constructor(width: number, height: number, texture: Texture, renderer: Renderer, options: SpriteOptions = null) {
+    constructor(texture: Texture, renderer: Renderer) {
         super();
 
         this._renderer = renderer;
         this._shader = renderer.getProgram("Basic");
         this._texture = texture;
-        this.width = width;
-        this.height = height;
         
         this._mvp = Matrix4.identity();
 
         this._getShaderLocations();
-        this._mergeOptions(options || {});
-        this._buildSprite();
     }
 
-    private _mergeOptions(options: SpriteOptions): void {
-        this._options = {};
+    private _mergeOptions(options: SpriteOptions): SpriteOptions {
+        const _options: SpriteOptions = {};
 
-        this._options.v2Pivot = options.v2Pivot || defaultOptions.v2Pivot;
-        this._options.v4UVs = options.v4UVs || defaultOptions.v4UVs;
+        _options.v2Pivot = options.v2Pivot || defaultOptions.v2Pivot;
+        _options.v4UVs = options.v4UVs || defaultOptions.v4UVs;
+
+        return _options;
     }
 
     private _getShaderLocations(): void {
@@ -60,33 +56,6 @@ class Sprite extends Geometry {
         this._uMVP = gl.getUniformLocation(this._shader, "uMVP");
 
         this._uTexture = gl.getUniformLocation(this._shader, "uTexture");
-    }
-
-    private _buildSprite(): void {
-        const w = this.width;
-        const h = this.height;
-        const px = this._options.v2Pivot[0];
-        const py = -this._options.v2Pivot[1];
-
-        this.addVertice(0.0 - px,  -h - py);
-        this.addVertice(  w - px,  -h - py);
-        this.addVertice(0.0 - px, 0.0 - py);
-        this.addVertice(  w - px, 0.0 - py);
-
-        this.addTexCoord(0.0, 1.0);
-        this.addTexCoord(1.0, 1.0);
-        this.addTexCoord(0.0, 0.0);
-        this.addTexCoord(1.0, 0.0);
-
-        const uvs = this._options.v4UVs;
-        for (let i=0;i<4;i++) {
-            this.addUV(uvs[0]/this._texture.width, uvs[1]/this._texture.height, uvs[2]/this._texture.width, uvs[3]/this._texture.height);
-        }
-
-        this.addTriangle(0, 1, 2);
-        this.addTriangle(1, 3, 2);
-
-        this.build(this._renderer.GL);
     }
 
     private _uploadGeometry(): void {
@@ -121,6 +90,75 @@ class Sprite extends Geometry {
         gl.uniform1i(this._uTexture, 0);
     }
 
+    public setGridSize(gridSize: number): Image {
+        this._gridSize = gridSize;
+        return this;
+    }
+
+    public addSprite(width: number, height: number, options: SpriteOptions = null): void {
+        const w = width;
+        const h = height;
+        const o = this._mergeOptions(options);
+        const px = o.v2Pivot[0];
+        const py = -o.v2Pivot[1];
+
+        this.addVertice(0.0 - px,  -h - py);
+        this.addVertice(  w - px,  -h - py);
+        this.addVertice(0.0 - px, 0.0 - py);
+        this.addVertice(  w - px, 0.0 - py);
+
+        this.addTexCoord(0.0, 1.0);
+        this.addTexCoord(1.0, 1.0);
+        this.addTexCoord(0.0, 0.0);
+        this.addTexCoord(1.0, 0.0);
+
+        const uvs = o.v4UVs;
+        for (let i=0;i<4;i++) {
+            this.addUV(uvs[0]/this._texture.width, uvs[1]/this._texture.height, uvs[2]/this._texture.width, uvs[3]/this._texture.height);
+        }
+
+        this.addTriangle(0, 1, 2);
+        this.addTriangle(1, 3, 2);
+    }
+
+    public addTile(x: number, y: number, tileX: number, tileY: number): Image {
+        const t = this._vertices.length / VERTEX_SIZE;
+        const gs = this._gridSize;
+        const uvs = this._texture.getTileUVs(tileX, tileY);
+
+        this.addVertice(x * gs, (-y - 1) * gs);
+        this.addVertice((x + 1) * gs, (-y - 1) * gs);
+        this.addVertice(x * gs, -y * gs);
+        this.addVertice((x + 1) * gs, -y * gs);
+
+        this.addTexCoord(0.0, 1.0);
+        this.addTexCoord(1.0, 1.0);
+        this.addTexCoord(0.0, 0.0);
+        this.addTexCoord(1.0, 0.0);
+
+        for (let i=0;i<4;i++) {
+            this.addUV(uvs[0]/this._texture.width, uvs[1]/this._texture.height, uvs[2]/this._texture.width, uvs[3]/this._texture.height);
+        }
+
+        this.addTriangle(t+0, t+1, t+2);
+        this.addTriangle(t+1, t+3, t+2);
+
+        return this;
+    }
+
+    public createSprite(width: number, height: number, options: SpriteOptions = null) : Image {
+        this.addSprite(width, height, options);
+        this.build();
+
+        return this;
+    }
+
+    public build(): Image {
+        super.build(this._renderer.GL);
+
+        return this;
+    }
+
     public render(entity: Entity, camera: Camera): void {
         const gl = this._renderer.GL;
 
@@ -141,4 +179,4 @@ class Sprite extends Geometry {
     public get texture(): Texture { return this._texture; }
 }
 
-export default Sprite;
+export default Image;
