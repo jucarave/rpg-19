@@ -20,6 +20,7 @@ class Entity {
         this._started = false;
 
         this.position.onChange.add(() => { this._updateTransformationMatrix(); });
+        this._updateTransformationMatrix();
     }
 
     private _updateTransformationMatrix(): void {

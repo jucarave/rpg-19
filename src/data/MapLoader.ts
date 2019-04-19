@@ -2,6 +2,8 @@ import Entity from "engine/world/Entity";
 import Texture from "engine/Texture";
 import Image from "engine/geometries/Image";
 import Renderer from "engine/Renderer";
+import Scene from "engine/world/Scene";
+import WorldItems from "./WorldItems";
 
 const testMap = [
    [  5,  1,  3,  4,  1,  1,  1, 36,  1,  1,  1,  1,  3,  6,  8,  1 ],
@@ -15,8 +17,15 @@ const testMap = [
    [  4,  2, 35,  1,  1,  1,  7,  5, 45,  1, 45,  4,  8,  5,  9,  1 ],
 ];
 
+const details = [
+    {x: 1, y: 0, type: 1},
+    {x: 10, y: 3, type: 1},
+    {x: 14, y: 7, type: 1},
+    {x: 1, y: 10, type: 1}
+];
+
 class MapLoader {
-    public static loadMap(tileset: Texture, renderer: Renderer): Entity {
+    public static loadMap(tileset: Texture, scene: Scene, renderer: Renderer): void {
         const sprite = new Image(tileset, renderer).setGridSize(32);
         const entity = new Entity(0, 0, sprite);
 
@@ -32,7 +41,21 @@ class MapLoader {
 
         sprite.build();
 
-        return entity;
+        scene.addEntity(entity, "Background");
+
+        // Foreground
+        const tex = Texture.getTexture("worldItems");
+        for (let i=0;i<details.length;i++) {
+            const detail = details[i];
+            const data = WorldItems[detail.type];
+
+            if (!data) { throw new Error("Cannot find World Item [" + detail.type + "]"); }
+
+            const sprite = new Image(tex, renderer).createSprite(data.size[0], data.size[1], { v2Pivot: data.pivot, v4UVs: data.uvs });
+            const ent = new Entity((detail.x + 0.5) * 32, (detail.y + 0.5) * 32, sprite);
+
+            scene.addEntity(ent, "Foreground");
+        }
     }
 }
 

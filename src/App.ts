@@ -15,6 +15,7 @@ class App {
         this._renderer.clear();
 
         Texture.loadTexture("characters", "img/characters.png", this._renderer.GL);
+        Texture.loadTexture("worldItems", "img/worldItems.png", this._renderer.GL);
         Texture.loadTexture("tileset", "img/tileset.png", this._renderer.GL).loadTiles(8, 8, 32);
 
         this._loading();
@@ -38,18 +39,18 @@ class App {
         entity.addComponent(new CharacterComponent());
         entity.addComponent(new PlayerComponent());
 
-        // Tileset
-        const tileTex = Texture.getTexture("tileset");
-        const tileEnt = MapLoader.loadMap(tileTex, this._renderer);
-
         const scene = new Scene();
         scene.camera.position.set(8*32, 4.5*32);
 
         scene.addLayer("Background");
-        scene.addEntity(tileEnt, "Background");
-        
         scene.addLayer("Entities");
+        scene.addLayer("Foreground");
+        
         scene.addEntity(entity, "Entities");
+
+        // Tileset
+        const tileTex = Texture.getTexture("tileset");
+        MapLoader.loadMap(tileTex, scene, this._renderer);
 
         // Draw scene
         this._renderScene(scene);
