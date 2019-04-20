@@ -4,6 +4,7 @@ import Tween from "engine/Tween";
 import Image from "engine/geometries/Image";
 import Camera from "engine/world/Camera";
 import OrderDrawComponent from "./OrderDrawComponent";
+import { GRID_SIZE } from "data/Constants";
 
 class CharacterComponent extends Component {
     private _sprite                  : Image;
@@ -21,7 +22,7 @@ class CharacterComponent extends Component {
     }
 
     private _updateEntityPosition(): void {
-        this.entity.position.set((this._position.x + 0.5) * 32, (this._position.y + 0.5) * 32);
+        this.entity.position.set((this._position.x + 0.5) * GRID_SIZE, (this._position.y + 0.5) * GRID_SIZE);
     }
 
     private _orderRender(camera: Camera): void {

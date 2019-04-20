@@ -7,6 +7,7 @@ import PlayerComponent from 'components/PlayerComponent';
 import CharacterComponent from 'components/CharacterComponent';
 import MapLoader from 'data/MapLoader';
 import OrderDrawComponent from 'components/OrderDrawComponent';
+import { GRID_SIZE } from 'data/Constants';
 
 class App {
     private _renderer           : Renderer;
@@ -41,7 +42,7 @@ class App {
         entity.addComponent(new PlayerComponent());
 
         const scene = new Scene();
-        scene.camera.position.set(8*32, 4.5*32);
+        scene.camera.position.set(8*GRID_SIZE, 4.5*GRID_SIZE);
 
         scene.addLayer("Background");
         scene.addLayer("Entities");

@@ -5,6 +5,7 @@ import Renderer from "engine/Renderer";
 import Scene from "engine/world/Scene";
 import WorldItems from "./WorldItems";
 import WorldDetailComponent from "components/WorldDetailComponent";
+import { GRID_SIZE } from "./Constants";
 
 const testMap = [
    [  5,  1,  3,  4,  1,  1,  1, 36,  1,  1,  1,  1,  3,  6,  8,  1 ],
@@ -27,7 +28,7 @@ const details = [
 
 class MapLoader {
     public static loadMap(tileset: Texture, scene: Scene, renderer: Renderer): void {
-        const sprite = new Image(tileset, renderer).setGridSize(32);
+        const sprite = new Image(tileset, renderer).setGridSize(GRID_SIZE);
         const entity = new Entity("WorldMap", 0, 0, sprite);
 
         for (let y=0;y<testMap.length;y++) {
@@ -56,11 +57,14 @@ class MapLoader {
 
             if (!data) { throw new Error("Cannot find World Item [" + detail.type + "]"); }
 
+            const x = (detail.x + 0.5) * GRID_SIZE;
+            const y = (detail.y + 0.5) * GRID_SIZE;
+
             const sprite = new Image(tex, renderer);
-            sprite.addSprite( (detail.x+0.5)*32, (detail.y+0.5)*32, data.size[0], data.size[1], { v2Pivot: data.pivot, v4UVs: data.uvs });
+            sprite.addSprite(x, y, data.size[0], data.size[1], { v2Pivot: data.pivot, v4UVs: data.uvs });
             sprite.build();
             
-            worldDetailComponent.addImage([(detail.x+0.5)*32, (detail.y+0.5)*32], sprite);
+            worldDetailComponent.addImage([x, y], sprite);
         }
     }
 }
