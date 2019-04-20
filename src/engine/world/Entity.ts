@@ -3,6 +3,7 @@ import Image from "../geometries/Image";
 import Camera from "./Camera";
 import Matrix4 from "../math/Matrix4";
 import Component from "./Component";
+import Scene from "./Scene";
 
 class Entity {
     private _image                      : Image;
@@ -10,9 +11,13 @@ class Entity {
     private _components                 : Array<Component>;
     private _started                    : boolean;
 
+    public scene                        : Scene;
+
+    public readonly name                : string;
     public readonly position            : Vector2;
 
-    constructor(x: number, y: number, image?: Image) {
+    constructor(name: string, x: number, y: number, image?: Image) {
+        this.name = name;
         this.position = new Vector2(x, y);
         this._image = image;
         this._transMatrix = Matrix4.identity();
@@ -61,10 +66,21 @@ class Entity {
         });
     }
 
+    private _renderComponents(camera: Camera): void {
+        this._components.forEach((component: Component) => {
+            component.render(camera);
+        });
+    }
+
     public render(camera: Camera): void {
-        if (!this._image) { return; }
+        if (!this._image) { 
+            this._renderComponents(camera);
+            return; 
+        }
 
         this._image.render(this, camera);
+
+        this._renderComponents(camera);
     }
 
     public get transformationMatrix(): Matrix4 {

@@ -95,17 +95,17 @@ class Image extends Geometry {
         return this;
     }
 
-    public addSprite(width: number, height: number, options: SpriteOptions = null): void {
+    public addSprite(x: number, y: number, width: number, height: number, options: SpriteOptions = null): void {
         const w = width;
         const h = height;
         const o = this._mergeOptions(options);
         const px = o.v2Pivot[0];
         const py = -o.v2Pivot[1];
 
-        this.addVertice(0.0 - px,  -h - py);
-        this.addVertice(  w - px,  -h - py);
-        this.addVertice(0.0 - px, 0.0 - py);
-        this.addVertice(  w - px, 0.0 - py);
+        this.addVertice(x + 0.0 - px, -y + (-h - py));
+        this.addVertice(x +   w - px, -y + (-h - py));
+        this.addVertice(x + 0.0 - px, -y + (0.0 - py));
+        this.addVertice(x +   w - px, -y + (0.0 - py));
 
         this.addTexCoord(0.0, 1.0);
         this.addTexCoord(1.0, 1.0);
@@ -147,7 +147,7 @@ class Image extends Geometry {
     }
 
     public createSprite(width: number, height: number, options: SpriteOptions = null) : Image {
-        this.addSprite(width, height, options);
+        this.addSprite(0, 0, width, height, options);
         this.build();
 
         return this;

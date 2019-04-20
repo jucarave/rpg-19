@@ -1,14 +1,19 @@
 import Component from "engine/world/Component";
 import Vector2 from "engine/math/Vector2";
 import Tween from "engine/Tween";
+import Image from "engine/geometries/Image";
+import Camera from "engine/world/Camera";
+import OrderDrawComponent from "./OrderDrawComponent";
 
 class CharacterComponent extends Component {
+    private _sprite                  : Image;
     private _position               : Vector2;
     private _busy                   : boolean;
 
-    constructor() {
+    constructor(sprite: Image) {
         super();
 
+        this._sprite = sprite;
         this._position = new Vector2(0.0, 0.0);
         this._busy = false;
 
@@ -17,6 +22,10 @@ class CharacterComponent extends Component {
 
     private _updateEntityPosition(): void {
         this.entity.position.set((this._position.x + 0.5) * 32, (this._position.y + 0.5) * 32);
+    }
+
+    private _orderRender(camera: Camera): void {
+        this._sprite.render(this.entity, camera);
     }
 
     public moveTo(xTo: number, yTo: number): void {
@@ -28,11 +37,16 @@ class CharacterComponent extends Component {
         });
     }
 
-    public start() {
+    public start(): void {
         this._updateEntityPosition();
-    }
 
-    public update() {
+        const orderDraw = this.entity.scene.getEntity("OrderDraw");
+        const comp = <OrderDrawComponent>orderDraw.getComponent("OrderDrawComponent");
+
+        comp.renderImage(
+            () => { return this.entity.position.y; }, 
+            (camera: Camera) => { this._orderRender(camera); }
+        );
     }
     
     public get componentName(): string { return "CharacterComponent"; }

@@ -6,6 +6,7 @@ import Scene from 'engine/world/Scene';
 import PlayerComponent from 'components/PlayerComponent';
 import CharacterComponent from 'components/CharacterComponent';
 import MapLoader from 'data/MapLoader';
+import OrderDrawComponent from 'components/OrderDrawComponent';
 
 class App {
     private _renderer           : Renderer;
@@ -34,9 +35,9 @@ class App {
         // Create scene
         const texture = Texture.getTexture("characters");
         const sprite = new Image(texture, this._renderer).createSprite(32.0, 64.0, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
-        const entity = new Entity(0, 0, sprite);
+        const entity = new Entity("Player", 0, 0, null);
 
-        entity.addComponent(new CharacterComponent());
+        entity.addComponent(new CharacterComponent(sprite));
         entity.addComponent(new PlayerComponent());
 
         const scene = new Scene();
@@ -47,6 +48,10 @@ class App {
         scene.addLayer("Foreground");
         
         scene.addEntity(entity, "Entities");
+        
+        const orderDraw = new Entity("OrderDraw", 0, 0, null);
+        orderDraw.addComponent(new OrderDrawComponent());
+        scene.addEntity(orderDraw, "Entities");
 
         // Tileset
         const tileTex = Texture.getTexture("tileset");

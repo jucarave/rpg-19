@@ -17,7 +17,7 @@ class Scene {
         this._started = false;
     }
 
-    public addLayer(layerId: string) {
+    public addLayer(layerId: string): void {
         this._layers[layerId] = new Array();
     }
 
@@ -26,12 +26,26 @@ class Scene {
             throw new Error("Cannot find layer [" + layerId + "]");
         }
 
+        entity.scene = this;
+
         const layer = this._layers[layerId];
         layer.push(entity);
 
         if (this._started) {
             entity.start();
         }
+    }
+
+    public getEntity(name: string): Entity {
+        for (const i in this._layers) {
+            for (let j=0,ent;ent=this._layers[i][j];j++) {
+                if (ent.name === name) {
+                    return ent;
+                }
+            }
+        }
+
+        return null;
     }
 
     public start(): void {
