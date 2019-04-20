@@ -2,6 +2,7 @@ import Image from "engine/geometries/Image";
 import Component from "engine/world/Component";
 import Camera from "engine/world/Camera";
 import OrderDrawComponent from "./OrderDrawComponent";
+import BasicMaterial from "engine/materials/BasicMaterial";
 
 interface Detail {
     position: Array<number>;
@@ -34,7 +35,7 @@ class WorldDetailComponent extends Component {
     }
 
     private _orderRender(image: Image, camera: Camera) {
-        image.render(this.entity, camera);
+        BasicMaterial.render(image, image.texture, this.entity, camera);
     }
 
     public get componentName(): string { return "WorldDetailComponent"; }

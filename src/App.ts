@@ -8,6 +8,7 @@ import CharacterComponent from 'components/CharacterComponent';
 import MapLoader from 'data/MapLoader';
 import OrderDrawComponent from 'components/OrderDrawComponent';
 import { GRID_SIZE } from 'data/Constants';
+import BasicMaterial from 'engine/materials/BasicMaterial';
 
 class App {
     private _renderer           : Renderer;
@@ -29,7 +30,12 @@ class App {
             return;
         }
 
+        this._initMaterials();
         this._createScene();
+    }
+
+    private _initMaterials(): void {
+        BasicMaterial.init(this._renderer);
     }
 
     private _createScene(): void {
@@ -55,8 +61,7 @@ class App {
         scene.addEntity(orderDraw, "Entities");
 
         // Tileset
-        const tileTex = Texture.getTexture("tileset");
-        MapLoader.loadMap(tileTex, scene, this._renderer);
+        MapLoader.loadMap(scene, this._renderer);
 
         // Draw scene
         this._renderScene(scene);

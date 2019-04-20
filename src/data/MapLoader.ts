@@ -27,7 +27,8 @@ const details = [
 ];
 
 class MapLoader {
-    public static loadMap(tileset: Texture, scene: Scene, renderer: Renderer): void {
+    public static loadMap(scene: Scene, renderer: Renderer): void {
+        const tileset = Texture.getTexture("tileset");
         const sprite = new Image(tileset, renderer).setGridSize(GRID_SIZE);
         const entity = new Entity("WorldMap", 0, 0, sprite);
 

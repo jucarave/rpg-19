@@ -4,6 +4,7 @@ import Camera from "./Camera";
 import Matrix4 from "../math/Matrix4";
 import Component from "./Component";
 import Scene from "./Scene";
+import BasicMaterial from "engine/materials/BasicMaterial";
 
 class Entity {
     private _image                      : Image;
@@ -78,7 +79,7 @@ class Entity {
             return; 
         }
 
-        this._image.render(this, camera);
+        BasicMaterial.render(this._image, this._image.texture, this, camera);
 
         this._renderComponents(camera);
     }

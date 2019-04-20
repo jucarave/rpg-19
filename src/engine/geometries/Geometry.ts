@@ -62,6 +62,12 @@ class Geometry {
         this._texUVs = null;
         this._indices = null;
     }
+
+    public get trianglesLength(): number { return this._trianglesLength; }
+    public get vBuffer(): WebGLBuffer { return this._vBuffer; }
+    public get uvBuffer(): WebGLBuffer { return this._uvBuffer; }
+    public get tBuffer(): WebGLBuffer { return this._tBuffer; }
+    public get iBuffer(): WebGLBuffer { return this._iBuffer; }
 }
 
 export default Geometry;

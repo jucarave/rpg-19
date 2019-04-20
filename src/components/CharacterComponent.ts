@@ -5,6 +5,7 @@ import Image from "engine/geometries/Image";
 import Camera from "engine/world/Camera";
 import OrderDrawComponent from "./OrderDrawComponent";
 import { GRID_SIZE } from "data/Constants";
+import BasicMaterial from "engine/materials/BasicMaterial";
 
 class CharacterComponent extends Component {
     private _sprite                  : Image;
@@ -26,7 +27,7 @@ class CharacterComponent extends Component {
     }
 
     private _orderRender(camera: Camera): void {
-        this._sprite.render(this.entity, camera);
+        BasicMaterial.render(this._sprite, this._sprite.texture, this.entity, camera);
     }
 
     public moveTo(xTo: number, yTo: number): void {
