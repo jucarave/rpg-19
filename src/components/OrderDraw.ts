@@ -6,7 +6,7 @@ interface DrawInstruction {
     render: Function;
 }
 
-class OrderDrawComponent extends Component {
+class OrderDraw extends Component {
     private _instructions              : Array<DrawInstruction>;
     private _imagesCount               : number;
 
@@ -45,7 +45,7 @@ class OrderDrawComponent extends Component {
         });
     }
 
-    public get componentName(): string { return "OrderDrawComponent"; }
+    public get componentName(): string { return "OrderDraw"; }
 }
 
-export default OrderDrawComponent;
+export default OrderDraw;

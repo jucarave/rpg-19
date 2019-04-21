@@ -1,17 +1,17 @@
 import Component from "engine/world/Component";
 import Input from 'engine/Input';
-import CharacterComponent from "./CharacterComponent";
+import Character from "./Character";
 
-class PlayerComponent extends Component {
+class Player extends Component {
     
-    private _characterController    : CharacterComponent;
+    private _characterController    : Character;
 
     constructor() {
         super();
     }
 
     public start(): void {
-        this._characterController = <CharacterComponent> this.entity.getComponent("CharacterComponent");
+        this._characterController = <Character> this.entity.getComponent("Character");
     }
 
     private _checkMovement(): void {
@@ -34,7 +34,7 @@ class PlayerComponent extends Component {
         this._checkMovement();
     }
 
-    public get componentName(): string { return "PlayerComponent"; }
+    public get componentName(): string { return "Player"; }
 }
 
-export default PlayerComponent;
+export default Player;

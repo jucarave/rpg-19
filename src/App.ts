@@ -3,16 +3,16 @@ import Image from 'engine/geometries/Image';
 import Texture from 'engine/Texture';
 import Entity from 'engine/world/Entity';
 import Scene from 'engine/world/Scene';
-import PlayerComponent from 'components/PlayerComponent';
-import CharacterComponent from 'components/CharacterComponent';
+import Player from 'components/Player';
+import Character from 'components/Character';
 import MapLoader from 'data/MapLoader';
-import OrderDrawComponent from 'components/OrderDrawComponent';
+import OrderDraw from 'components/OrderDraw';
 import { GRID_SIZE } from 'data/Constants';
 import BasicMaterial from 'engine/materials/BasicMaterial';
 import RenderTexture from 'engine/RenderTexture';
 import { ceilToPowerOf2 } from 'engine/Utilts';
 import BasicSeeThroughMaterial from 'engine/materials/BasicSeeThroughMaterial';
-import CameraFollowComponent from 'components/CameraFollowComponent';
+import CameraFollow from 'components/CameraFollow';
 
 class App {
     private _renderer           : Renderer;
@@ -52,9 +52,9 @@ class App {
         const sprite = new Image(texture, this._renderer).createSprite(32.0, 64.0, { v2Pivot: [16.0, 64.0], v4UVs: [0.0, 0.0, 32.0, 64.0] });
         const entity = new Entity("Player", 0, 0, null);
 
-        entity.addComponent(new CharacterComponent(sprite));
-        entity.addComponent(new PlayerComponent());
-        entity.addComponent(new CameraFollowComponent());
+        entity.addComponent(new Character(sprite));
+        entity.addComponent(new Player());
+        entity.addComponent(new CameraFollow());
 
         const scene = new Scene();
         scene.camera.position.set(8*GRID_SIZE, 4.5*GRID_SIZE);
@@ -66,7 +66,7 @@ class App {
         scene.addEntity(entity, "Entities");
         
         const orderDraw = new Entity("OrderDraw", 0, 0, null);
-        orderDraw.addComponent(new OrderDrawComponent());
+        orderDraw.addComponent(new OrderDraw());
         scene.addEntity(orderDraw, "Entities");
 
         // Tileset
