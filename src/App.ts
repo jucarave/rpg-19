@@ -12,6 +12,7 @@ import BasicMaterial from 'engine/materials/BasicMaterial';
 import RenderTexture from 'engine/RenderTexture';
 import { ceilToPowerOf2 } from 'engine/Utilts';
 import BasicSeeThroughMaterial from 'engine/materials/BasicSeeThroughMaterial';
+import CameraFollowComponent from 'components/CameraFollowComponent';
 
 class App {
     private _renderer           : Renderer;
@@ -53,6 +54,7 @@ class App {
 
         entity.addComponent(new CharacterComponent(sprite));
         entity.addComponent(new PlayerComponent());
+        entity.addComponent(new CameraFollowComponent());
 
         const scene = new Scene();
         scene.camera.position.set(8*GRID_SIZE, 4.5*GRID_SIZE);
