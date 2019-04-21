@@ -6,7 +6,7 @@ import { VERTEX_SIZE } from 'engine/Constants';
 
 const defaultOptions: SpriteOptions = {
     v2Pivot: [0, 0],
-    v4UVs: [0, 0, 1, 1]
+    v4UVs: null
 };
 
 class Image extends Geometry {
@@ -39,7 +39,7 @@ class Image extends Geometry {
     public addSprite(x: number, y: number, width: number, height: number, options: SpriteOptions = null): void {
         const w = width;
         const h = height;
-        const o = this._mergeOptions(options);
+        const o = this._mergeOptions(options || {});
         const px = o.v2Pivot[0];
         const py = -o.v2Pivot[1];
 
@@ -55,7 +55,11 @@ class Image extends Geometry {
 
         const uvs = o.v4UVs;
         for (let i=0;i<4;i++) {
-            this.addUV(uvs[0]/this._texture.width, uvs[1]/this._texture.height, uvs[2]/this._texture.width, uvs[3]/this._texture.height);
+            if (uvs != null) {
+                this.addUV(uvs[0]/this._texture.width, uvs[1]/this._texture.height, uvs[2]/this._texture.width, uvs[3]/this._texture.height);
+            } else {
+                this.addUV(0, 0, 1, 1);
+            }
         }
 
         this.addTriangle(0, 1, 2);

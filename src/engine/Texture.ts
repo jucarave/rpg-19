@@ -1,4 +1,4 @@
-interface TextureType {
+interface TexturesMap {
     [index: string]: Texture;
 }
 
@@ -8,8 +8,10 @@ class Texture {
     private _ready      : boolean;
     private _tiles      : Array<Array<number>>;
     private _tileSize   : Array<number>;
+    private _width      : number;
+    private _height     : number;
 
-    protected static _textures      : TextureType;
+    protected static _textures      : TexturesMap;
 
     constructor(src: string, gl: WebGLRenderingContext) {
         this._ready = false;
@@ -17,12 +19,17 @@ class Texture {
         this._tiles = null;
         this._tileSize = null;
 
-        this._image = new Image();
-        this._image.src = src;
+        if (src != null) {
+            this._image = new Image();
+            this._image.src = src;
 
-        this._image.onload = () => {
-            this._parseTexture(gl);
-        };
+            this._image.onload = () => {
+                this._width = this._image.width;
+                this._height = this._image.height;
+                
+                this._parseTexture(gl);
+            };
+        }
     }
 
     private _parseTexture(gl: WebGLRenderingContext): void {
@@ -57,6 +64,13 @@ class Texture {
         return this._tiles[tileY * this._tileSize[0] + tileX];
     }
 
+    public setTexture(width: number, height: number, texture: WebGLTexture): void {
+        this._texture = texture;
+        this._ready = true;
+        this._width = width;
+        this._height = height;
+    }
+
     public static loadTexture(key: string, src: string, gl: WebGLRenderingContext): Texture {
         if (!Texture._textures) { 
             Texture._textures = {}; 
@@ -65,6 +79,13 @@ class Texture {
         Texture._textures[key] = new Texture(src, gl);
 
         return Texture._textures[key];
+    }
+
+    public static fromWebGLTexture(width: number, height: number, tex: WebGLTexture, gl: WebGLRenderingContext): Texture {
+        const ret = new Texture(null, gl);
+        ret.setTexture(width, height, tex);
+
+        return ret;
     }
 
     public static getTexture(key: string): Texture {
@@ -85,8 +106,8 @@ class Texture {
 
     public get ready(): boolean { return this._ready; }
     public get texture(): WebGLTexture { return this._texture; }
-    public get width(): number { return this._image.width; }
-    public get height(): number { return this._image.height; }
+    public get width(): number { return this._width; }
+    public get height(): number { return this._height; }
     public get tileSize(): Array<number> { return this._tileSize; }
 }
 

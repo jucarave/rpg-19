@@ -5,6 +5,7 @@ export type ShaderStruct = {
 
 export type ShaderCollection = {
     Basic: WebGLProgram;
+    BasicSeeThrough: WebGLProgram;
 };
 
 export type SpriteOptions = {

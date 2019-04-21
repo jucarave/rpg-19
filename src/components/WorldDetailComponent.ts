@@ -2,7 +2,8 @@ import Image from "engine/geometries/Image";
 import Component from "engine/world/Component";
 import Camera from "engine/world/Camera";
 import OrderDrawComponent from "./OrderDrawComponent";
-import BasicMaterial from "engine/materials/BasicMaterial";
+import BasicSeeThroughMaterial from "engine/materials/BasicSeeThroughMaterial";
+import RenderTexture from "engine/RenderTexture";
 
 interface Detail {
     position: Array<number>;
@@ -35,7 +36,9 @@ class WorldDetailComponent extends Component {
     }
 
     private _orderRender(image: Image, camera: Camera) {
-        BasicMaterial.render(image, image.texture, this.entity, camera);
+        const renderTexture = RenderTexture.getRenderTexture("Entities");
+        
+        BasicSeeThroughMaterial.render(image, image.texture, renderTexture.texture, this.entity, camera);
     }
 
     public get componentName(): string { return "WorldDetailComponent"; }

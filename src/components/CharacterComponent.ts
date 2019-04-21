@@ -6,6 +6,7 @@ import Camera from "engine/world/Camera";
 import OrderDrawComponent from "./OrderDrawComponent";
 import { GRID_SIZE } from "data/Constants";
 import BasicMaterial from "engine/materials/BasicMaterial";
+import RenderTexture from "engine/RenderTexture";
 
 class CharacterComponent extends Component {
     private _sprite                  : Image;
@@ -27,6 +28,12 @@ class CharacterComponent extends Component {
     }
 
     private _orderRender(camera: Camera): void {
+        const renderTexture = RenderTexture.getRenderTexture("Entities");
+        const gl = renderTexture.GL;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, renderTexture.frameBuffer);
+        BasicMaterial.render(this._sprite, this._sprite.texture, this.entity, camera);
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         BasicMaterial.render(this._sprite, this._sprite.texture, this.entity, camera);
     }
 

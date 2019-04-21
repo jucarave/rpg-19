@@ -2,6 +2,7 @@ import { BasicShader } from './shaders/Basic';
 import { ShaderStruct, ShaderCollection } from './Types';
 import Input from './Input';
 import Tween from './Tween';
+import { BasicSeeThroughShader } from './shaders/BasicSeeThrough';
 
 class Renderer {
     private _canvas         : HTMLCanvasElement;
@@ -42,12 +43,13 @@ class Renderer {
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.clearColor(0, 0, 0, 1);
+        gl.clearColor(0, 0, 0, 0);
     }
 
     private _initShaders(): void {
         this._shaders = {
-            Basic: this._compileShader(BasicShader)
+            Basic: this._compileShader(BasicShader),
+            BasicSeeThrough: this._compileShader(BasicSeeThroughShader)
         };
     }
 
@@ -100,7 +102,7 @@ class Renderer {
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
-    public getProgram(program: 'Basic'): WebGLProgram {
+    public getProgram(program: 'Basic' | 'BasicSeeThrough'): WebGLProgram {
         return this._shaders[program];
     }
 

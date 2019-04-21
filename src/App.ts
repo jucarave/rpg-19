@@ -9,6 +9,9 @@ import MapLoader from 'data/MapLoader';
 import OrderDrawComponent from 'components/OrderDrawComponent';
 import { GRID_SIZE } from 'data/Constants';
 import BasicMaterial from 'engine/materials/BasicMaterial';
+import RenderTexture from 'engine/RenderTexture';
+import { ceilToPowerOf2 } from 'engine/Utilts';
+import BasicSeeThroughMaterial from 'engine/materials/BasicSeeThroughMaterial';
 
 class App {
     private _renderer           : Renderer;
@@ -20,6 +23,9 @@ class App {
         Texture.loadTexture("characters", "img/characters.png", this._renderer.GL);
         Texture.loadTexture("worldItems", "img/worldItems.png", this._renderer.GL);
         Texture.loadTexture("tileset", "img/tileset.png", this._renderer.GL).loadTiles(8, 8, 32);
+
+        const size = ceilToPowerOf2(this._renderer.GL.canvas.width);
+        new RenderTexture("Entities", size, size, this._renderer.GL);
 
         this._loading();
     }
@@ -36,6 +42,7 @@ class App {
 
     private _initMaterials(): void {
         BasicMaterial.init(this._renderer);
+        BasicSeeThroughMaterial.init(this._renderer);
     }
 
     private _createScene(): void {
@@ -67,9 +74,19 @@ class App {
         this._renderScene(scene);
     }
 
+    private _clearRenders(): void {
+        const gl = this._renderer.GL;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, RenderTexture.getRenderTexture("Entities").frameBuffer);
+        this._renderer.clear();
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        this._renderer.clear();
+    }
+
     private _renderScene(scene: Scene): void {
         this._renderer.update();
-        this._renderer.clear();
+        this._clearRenders();
 
         scene.update();
         scene.render();
