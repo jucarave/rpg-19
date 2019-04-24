@@ -23,7 +23,7 @@ class App {
 
         Texture.loadTexture("characters", "img/characters.png", this._renderer.GL);
         Texture.loadTexture("worldItems", "img/worldItems.png", this._renderer.GL);
-        Texture.loadTexture("tileset", "img/tileset.png", this._renderer.GL).loadTiles(8, 8, 32);
+        Texture.loadTexture("tileset", "img/tileset.png", this._renderer.GL).loadTiles(16, 8, 32);
 
         const size = ceilToPowerOf2(this._renderer.GL.canvas.width);
         new RenderTexture("Entities", size, size, this._renderer.GL);
