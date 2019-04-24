@@ -67,6 +67,14 @@ class Entity {
         });
     }
 
+    public destroy(): void {
+        this._components.forEach((component: Component) => {
+            component.destroy();
+        });
+
+        this.scene.removeEntity(this);
+    }
+
     private _renderComponents(camera: Camera): void {
         this._components.forEach((component: Component) => {
             component.render(camera);

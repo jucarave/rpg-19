@@ -36,6 +36,17 @@ class Scene {
         }
     }
 
+    public removeEntity(entity: Entity): void {
+        for (const i in this._layers) {
+            for (let j=0,ent;ent=this._layers[i][j];j++) {
+                if (ent.name === entity.name) {
+                    this._layers[i].splice(j, 1);
+                    return;
+                }
+            }
+        }
+    }
+
     public getEntity(name: string): Entity {
         for (const i in this._layers) {
             for (let j=0,ent;ent=this._layers[i][j];j++) {
