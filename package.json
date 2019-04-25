@@ -15,6 +15,7 @@
   "dependencies": {
     "browserify": "^13.1.0",
     "errorify": "^0.3.1",
+    "express": "^4.16.4",
     "gulp": "^4.0.0",
     "tsify": "^2.0.2",
     "typescript": "^2.0.3",

@@ -59,6 +59,7 @@ class Geometry {
         this._trianglesLength = this._indices.length;
 
         this._vertices = null;
+        this._texCoords = null;
         this._texUVs = null;
         this._indices = null;
     }
