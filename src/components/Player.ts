@@ -18,10 +18,10 @@ class Player extends Component {
         let xTo = 0;
         let yTo = 0;
 
-        if (Input.getKeyPressed(Input.KEYS.RIGHT)) { xTo = 1; } else
-        if (Input.getKeyPressed(Input.KEYS.LEFT)) { xTo = -1; } else 
-        if (Input.getKeyPressed(Input.KEYS.DOWN)) { yTo = 1; } else
-        if (Input.getKeyPressed(Input.KEYS.UP)) { yTo = -1; }
+        if (Input.getKeyPress(Input.KEYS.RIGHT)) { xTo = 1; } else
+        if (Input.getKeyPress(Input.KEYS.LEFT)) { xTo = -1; } else 
+        if (Input.getKeyPress(Input.KEYS.DOWN)) { yTo = 1; } else
+        if (Input.getKeyPress(Input.KEYS.UP)) { yTo = -1; }
 
         if (xTo != 0 || yTo != 0) {
             this._characterController.moveTo(xTo, yTo);

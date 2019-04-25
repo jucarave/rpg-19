@@ -22,6 +22,8 @@ class WorldMap extends Component {
         const ind = _y * this._width +  _x;
         const solid = this._map[ind];
 
+        if (!solid) { return true; }
+
         return (solid[(y - _y * 64) * 64 + (x - _x * 64)] > 0);
     }
 

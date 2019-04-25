@@ -56,6 +56,14 @@ class Input {
 
         return false;
     }
+
+    public getKeyPress(keyCode: number): boolean {
+        if (this._keys[keyCode] === 1) {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 export default new Input();
