@@ -13,13 +13,19 @@ import RenderTexture from 'engine/RenderTexture';
 import { ceilToPowerOf2 } from 'engine/Utilts';
 import BasicSeeThroughMaterial from 'engine/materials/BasicSeeThroughMaterial';
 import CameraFollow from 'components/CameraFollow';
+declare const Stats: any;
 
 class App {
     private _renderer           : Renderer;
+    private _stats              : any;
 
     constructor() {
         this._renderer = new Renderer(1024, 576, document.getElementById("divGame"));
         this._renderer.clear();
+
+        this._stats = new Stats();
+        this._stats.showPanel(1);
+        document.body.appendChild(this._stats.dom);
 
         Texture.loadTexture("characters", "img/characters.png", this._renderer.GL);
         Texture.loadTexture("worldItems", "img/worldItems.png", this._renderer.GL);
@@ -87,11 +93,15 @@ class App {
     }
 
     private _renderScene(scene: Scene): void {
+        this._stats.begin();
+
         this._renderer.update();
         this._clearRenders();
 
         scene.update();
         scene.render();
+
+        this._stats.end();
 
         requestAnimationFrame(() => {
             this._renderScene(scene);
