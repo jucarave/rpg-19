@@ -1,22 +1,41 @@
 import { VERTEX_SIZE } from '../Constants';
 
 class Geometry {
-    protected _vertices           : Array<number>;
-    protected _texUVs          : Array<number>;
-    protected _texCoords             : Array<number>;
-    protected _indices            : Array<number>;
+    protected _vertices             : Array<number>;
+    protected _texUVs               : Array<number>;
+    protected _texCoords            : Array<number>;
+    protected _indices              : Array<number>;
+    protected _boundingBox          : Array<number>
     
-    protected _vBuffer            : WebGLBuffer;
-    protected _uvBuffer            : WebGLBuffer;
-    protected _tBuffer            : WebGLBuffer;
-    protected _iBuffer            : WebGLBuffer;
-    protected _trianglesLength    : number;
+    protected _vBuffer              : WebGLBuffer;
+    protected _uvBuffer             : WebGLBuffer;
+    protected _tBuffer              : WebGLBuffer;
+    protected _iBuffer              : WebGLBuffer;
+    protected _trianglesLength      : number;
 
     constructor() {
         this._vertices = [];
         this._indices = [];
         this._texUVs = [];
         this._texCoords = [];
+        this._boundingBox = null;
+    }
+
+    private _calculateBBox(): void {
+        let x1 = Infinity;
+        let y1 = Infinity;
+        let x2 = -Infinity;
+        let y2 = -Infinity;
+
+        for (let i=0;i<this._vertices.length;i+=2) {
+            x1 = Math.min(x1, this._vertices[i]);
+            y1 = Math.min(y1, this._vertices[i + 1]);
+            x2 = Math.max(x2, this._vertices[i]);
+            y2 = Math.max(y2, this._vertices[i + 1]);
+        }
+        
+
+        this._boundingBox = [x1, y1, x2, y2];
     }
 
     public addVertice(x: number, y: number): void {
@@ -40,6 +59,8 @@ class Geometry {
     }
 
     public build(gl: WebGLRenderingContext): void {
+        this._calculateBBox();
+
         this._vBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this._vBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this._vertices), gl.STATIC_DRAW);
@@ -69,6 +90,7 @@ class Geometry {
     public get uvBuffer(): WebGLBuffer { return this._uvBuffer; }
     public get tBuffer(): WebGLBuffer { return this._tBuffer; }
     public get iBuffer(): WebGLBuffer { return this._iBuffer; }
+    public get boundingBox(): Array<number> { return this._boundingBox; }
 }
 
 export default Geometry;

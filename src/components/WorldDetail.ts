@@ -36,8 +36,10 @@ class WorldDetail extends Component {
     }
 
     private _orderRender(image: Image, camera: Camera) {
+        if (!camera.isGeometryOnCamera(image, this.entity)) { return; }
+
         const renderTexture = RenderTexture.getRenderTexture("Entities");
-        
+
         BasicSeeThroughMaterial.render(image, image.texture, renderTexture.texture, this.entity, camera);
     }
 

@@ -62,7 +62,7 @@ class MapLoader {
                     const sprite = new Image(foregroundTex, renderer);
                     sprite.addSprite(x, y, data.size[0], data.size[1], { v2Pivot: data.pivot, v4UVs: data.uvs });
                     sprite.build();
-                    
+
                     worldDetailComponent.addImage([x, y], sprite);
                 }
 

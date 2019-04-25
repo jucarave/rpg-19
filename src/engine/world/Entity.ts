@@ -87,6 +87,10 @@ class Entity {
             return; 
         }
 
+        if (!camera.isGeometryOnCamera(this._image, this)) {
+            return;
+        }
+
         BasicMaterial.render(this._image, this._image.texture, this, camera);
 
         this._renderComponents(camera);
